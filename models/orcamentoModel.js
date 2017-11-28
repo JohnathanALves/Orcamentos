@@ -1,18 +1,19 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var produto = new Schema({
-  produto : String,
-  unidade : String,
-  quantidade : Number,
-  vlor : Number
-});
+var Produto = require('./produtoModel');
 
 // Schema
 var orcamentoSchema = new Schema({
   data : String,
   parceiro: String,
-  itens: [produto],
+  itens: [
+    {
+      Produto, 
+      'quantidade': {type: Number, required: true},
+      'valor' : {type: Number, required: true}
+    }
+  ],
   vendedor: String,
   fechou: {type :Boolean, default: false}
 });
