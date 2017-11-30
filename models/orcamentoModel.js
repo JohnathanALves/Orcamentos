@@ -9,7 +9,7 @@ var orcamentoSchema = new Schema({
   parceiro: String,
   itens: [
     {
-      Produto, 
+      produto : {type: Schema.Types.ObjectId, ref:'Produto'}, 
       'quantidade': {type: Number, required: true},
       'valor' : {type: Number, required: true}
     }

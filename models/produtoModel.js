@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
-var produto = new Schema({
+var produtoSchema = new Schema({
     produto : String,
     unidade : String
 });
