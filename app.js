@@ -5,9 +5,6 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose'); //database
 mongoose.Promise = require('bluebird');
 
-var orcamento = require('./routes/orcamento');
-var main = require('./routes/main'); // inicial
-
 var app = express();
 
 //database connection
@@ -37,10 +34,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// carregamento de rotas
 
+var main = require('./routes/main'); // inicial
+var orcamento = require('./routes/orcamento'); 
+var produto = require('./routes/produto'); 
 
+// use routes
 app.use('/', main);
 app.use('/orcamento', orcamento);
+app.use('/produto', produto);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

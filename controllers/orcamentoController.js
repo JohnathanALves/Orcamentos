@@ -2,19 +2,19 @@ var Orcamento = require('../models/orcamentoModel');
 var Produto = require('../models/produtoModel');
 
 module.exports = {
-  getOrcamentosbySeller: function(seller){
+  getOrcamentosbySeller: function(seller){ //REFAZER URGENTE
     Orcamento.find({'vendedor': seller}, function(err, result){
       if (err) return console.log(err);
       return result;
     });
   },
 
-  getOrcamentosByDate: function(start, end){
+  getOrcamentosByDate: function(start, end, callback){
     Orcamento.find({ data : { $gte: start, $lte: end} })
     .populate('produto')
     .exec(function(err, result){
       if(err) return console.log(err);
-      return result;
+      return callback(result);
     });
   },
 
@@ -31,8 +31,24 @@ module.exports = {
     });
   },
 
-  insertProduto : function(cod, codProduto, quantidade, valor){
-    
+  insertProduto : function(cod, codProduto, quantidade, valor, callback){
+    Orcamento.findById(cod, function(err, orc){
+      if (err) return console.log(err);
+      
+      Produto.findById(codProduto, function(err, prod){
+        if (err) return console.log(err);
+        console.log('opa');
+        orc.itens.push({
+          'produto' : prod._id,
+          'quantidade' : quantidade,
+          'valor' : valor
+        });
+        orc.save(function(err){
+          if(err) return console.log(err);
+          return callback(orc);
+        });
+      });
+    });
   }
 
 }
