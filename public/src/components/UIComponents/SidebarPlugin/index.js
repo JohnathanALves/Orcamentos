@@ -6,12 +6,12 @@ const SidebarStore = {
     {
       name: 'Geral',
       icon: 'ti-panel',
-      path: '/admin/overview'
+      path: '/overview'
     },
     {
       name: 'Orçamentos',
       icon: 'ti-file',
-      path: '/admin/orcamentos'
+      path: '/orcamentos'
     }
   ],
   displaySidebar (value) {

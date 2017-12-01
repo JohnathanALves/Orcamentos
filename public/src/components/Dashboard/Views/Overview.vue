@@ -1,8 +1,17 @@
 <template>
-  <div>oio</div>
+  <div>
+    {{nome}}
+    oiio
+  </div>
 </template>
 <script>
-  export default {}
+  export default {
+    data: function () {
+      return {
+        nome: 'jose'
+      }
+    }
+  }
 </script>
 <style>
 

@@ -7,7 +7,7 @@ import GlobalDirectives from './globalDirectives'
 import Notifications from './components/UIComponents/NotificationPlugin'
 import SideBar from './components/UIComponents/SidebarPlugin'
 import App from './App'
-
+import VueResource from 'vue-resource'
 // router setup
 import routes from './routes/routes'
 
@@ -24,9 +24,13 @@ Vue.use(GlobalDirectives)
 Vue.use(Notifications)
 Vue.use(SideBar)
 
+Vue.use(VueResource)
+Vue.http.options.root = 'http://localhost:3000/'
+
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes
+  mode: 'history', // remove #
   linkActiveClass: 'active'
 })
 

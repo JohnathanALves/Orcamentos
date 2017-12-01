@@ -10,12 +10,7 @@ const routes = [
   {
     path: '/',
     component: DashboardLayout,
-    redirect: '/admin/overview'
-  },
-  {
-    path: '/admin',
-    component: DashboardLayout,
-    redirect: '/admin/overview',
+    redirect: '/overview',
     children: [
       {
         path: 'overview',
@@ -27,10 +22,28 @@ const routes = [
         name: 'orcamentos',
         component: Orcamentos
       }
-
     ]
   },
+
   { path: '*', component: NotFound }
 ]
 
 export default routes
+// {
+//   path: '/admin',
+//   component: DashboardLayout,
+//   redirect: '/admin/overview',
+//   children: [
+//     {
+//       path: 'overview',
+//       name: 'Geral',
+//       component: Overview
+//     },
+//     {
+//       path: 'orcamentos',
+//       name: 'orcamentos',
+//       component: Orcamentos
+//     }
+//
+//   ]
+// },
