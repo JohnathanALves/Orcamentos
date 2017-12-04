@@ -3,8 +3,9 @@ var Schema = mongoose.Schema;
 
 
 var produtoSchema = new Schema({
-    produto : String,
-    unidade : String
+    produto: String,
+    unidade: String,
+    concorrencia: { type: Boolean, default: false }
 });
 
 

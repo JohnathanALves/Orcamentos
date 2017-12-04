@@ -5,17 +5,17 @@ var Produto = require('./produtoModel');
 
 // Schema
 var orcamentoSchema = new Schema({
-  data : String,
-  parceiro: String,
-  itens: [
-    {
-      produto : {type: Schema.Types.ObjectId, ref:'Produto'}, 
-      'quantidade': {type: Number, required: true},
-      'valor' : {type: Number, required: true}
-    }
-  ],
-  vendedor: String,
-  fechou: {type :Boolean, default: false}
+    data: String,
+    parceiro: String,
+    itens: [{
+        produto: { type: Schema.Types.ObjectId, ref: 'Produto', required: true },
+        'quantidade': { type: Number, required: true },
+        'valor': { type: Number, required: true },
+        fechou: { type: Boolean, default: false }
+    }],
+    vendedor: String,
+    status: { type: Boolean, default: true }
+
 });
 
 var Orcamento = mongoose.model('Orcamento', orcamentoSchema); //creates the model
