@@ -75,8 +75,8 @@
                                 <tbody>
                                     <tr v-for="item in itens" :key="item._id">
                                         <th scope="row">{{ itens.indexOf(item)+1}}</th>
-                                        <td>{{ item.produto }}</td>
-                                        <td>{{ item.unidade }}</td>
+                                        <td>{{ item.produto.produto }}</td>
+                                        <td>{{ item.produto.unidade }}</td>
                                         <td>{{ item.quantidade.toFixed(2) }}</td>
                                         <td>R${{ item.valor.toFixed(2) }}</td>
                                         <td>R${{ (item.valor * item.quantidade).toFixed(2)}}</td>
@@ -87,10 +87,10 @@
                                             </label>
                                         </td>
                                     </tr>
-                                    <tr v-bind:style="{display: (saldoTotal() == 'true')? true: none }">
+                                    <tr v-show="exibeTotais" class="table-success" >
                                         <th scope="row">#</th>
                                         <td colspan="4"><b>Total</b></td>
-                                        <td><b>R${{ saldoTotal() }}</b></td>
+                                        <td><b>R${{ saldoTotal }}</b></td>
                                         <td> {{totalFechados()}}</td>
                                     </tr>
                                 </tbody>
@@ -122,22 +122,16 @@
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label>Produto</label>
-                                    <autocomplete
-                                        url="http://localhost:3000/produto/search"
-                                        anchor="produto"
-                                        label="produto"
-                                        :on-select="getData">
-                                    </autocomplete>                                
-                                <input type="text" class="form-control" placeholder="Insira o nome do produto.">
+                                <label>Produto</label>   
+                                <v-select v-model="prodSelected" :options="listaProdutos"></v-select>
                             </div>
                             <div class="form-group">
                                 <label>Quantidade</label>
-                                <input type="text" class="form-control" placeholder="Insira a quantidade.">
+                                <input type="number" class="form-control" v-bind:value="addQuantidade" placeholder="Insira a quantidade.">
                             </div>
                             <div class="input-group">
                                 <span class="input-group-addon">$</span>
-                                <input type="text" class="form-control" placeholder="Insira o Valor.">
+                                <input type="number" class="form-control" v-bind:value="addValor" placeholder="Insira o Valor.">
                             </div>
                         </form>
                     </div>
@@ -154,20 +148,24 @@
 <script>
 
 import Datepicker from 'vuejs-datepicker';
-import Autocomplete from 'vue2-autocomplete-js';
+import vSelect from "vue-select";
 
 export default {
     components: {
         'datepicker': Datepicker,
-        'autocomplete': Autocomplete
+        vSelect
     },
     data(){
         return{
-            itens: [],
+            itens: [{}],
             currentVendedor: '',
             date: '',
-            addProd: {},
+            addProd:{},
+            addQuantidade: 0,
+            addValor: 0,
             vendedores:['Aline', 'Marilia','Ivonilton', 'Rose', 'Itailara'],
+            produtosBase: [{produto:'ditane', _id:'1561asd', unidade: 'KG'}, {produto:'agrex', _id:'1561asd', unidade: 'KG'}],
+            prodSelected: '',
             rotas: {
                 inicio: '/',
                 cotacao: '/cotacao'
@@ -184,24 +182,42 @@ export default {
         dataAtual(){
             let date = this.date = new Date();
             return date;
-        }
-    },
-    methods: {
+        },
+        listaProdutos(){
+            let lista = [];
+            this.produtosBase.forEach(element => lista.push(element.produto));
+            return lista;
+        },
         saldoTotal(){
             let total = 0;
             this.itens.forEach(element => {total += element.quantidade * element.valor});
             return total.toFixed(2);
         },
+        exibeTotais(){
+            if (this.itens.length) return true
+            return false
+        }
+    },
+    methods: {
         totalFechados(){
             let total = 0;
             this.itens.forEach(element => {(element.fechou? total +=1:0) });
             if (total) return total
             return;
         },
-        getData(obj){
-            console.log(obj);
+        adicionaProduto(){
+            let indexProd = this.produtosBase.findIndex(i => i.produto === this.prodSelected);
+            let addProd = {produto:this.produtosBase[indexProd], quantidade: parseFloat(this.addQuantidade), valor: parseFloat(this.addValor)};
+            this.itens.push(addProd);
+            console.log(this.itens);
+            return;
         }
-    }
+    },
+    // created(){
+    //     this.$http.get('produto')
+    //     .then(response => response.json())
+    //     .then(dados => this.produtosBase = dados, err => console.log(err));
+    // }
 }
 </script>
 
