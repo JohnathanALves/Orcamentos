@@ -89,9 +89,7 @@ export default {
     },
     saldoTotal: function(data){
       let total = 0;
-      data.itens.forEach(element => {
-        total += element.quantidade * element.valor
-      });
+      data.itens.forEach(element => {total += element.quantidade * element.valor});
       return total.toFixed(2);
     },
     cardBorder: function(card){

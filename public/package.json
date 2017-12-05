@@ -12,7 +12,9 @@
   "dependencies": {
     "vue": "^2.4.4",
     "vue-resource": "^1.3.4",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue2-autocomplete-js": "^0.2.2",
+    "vuejs-datepicker": "^0.9.21"
   },
   "browserslist": [
     "> 1%",
