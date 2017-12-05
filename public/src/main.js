@@ -1,52 +1,22 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import App from './App.vue'
+import VueRouter from 'vue-router';
+import { routes } from './routes';
+import VueResource from 'vue-resource';
 
-// Plugins
-import GlobalComponents from './globalComponents'
-import GlobalDirectives from './globalDirectives'
-import Notifications from './components/UIComponents/NotificationPlugin'
-import SideBar from './components/UIComponents/SidebarPlugin'
-import App from './App'
-import VueResource from 'vue-resource'
-// router setup
-import routes from './routes/routes'
-
-// library imports
-import Chartist from 'chartist'
-import 'bootstrap/dist/css/bootstrap.css'
-import './assets/sass/paper-dashboard.scss'
-import 'es6-promise/auto'
-
-// plugin setup
-Vue.use(VueRouter)
-Vue.use(GlobalComponents)
-Vue.use(GlobalDirectives)
-Vue.use(Notifications)
-Vue.use(SideBar)
-
-Vue.use(VueResource)
-Vue.http.options.root = 'http://localhost:3000/'
-
-// configure router
 const router = new VueRouter({
-  routes, // short for routes: routes
-  mode: 'history', // remove #
-  linkActiveClass: 'active'
-})
+    routes,
+    mode: 'history'
+});
 
-// global library setup
-Object.defineProperty(Vue.prototype, '$Chartist', {
-  get () {
-    return this.$root.Chartist
-  }
-})
+Vue.use(VueRouter);
+Vue.use(VueResource);
 
-/* eslint-disable no-new */
+Vue.http.options.root = 'http://127.0.0.1:3000';
+
 new Vue({
-  el: '#app',
-  render: h => h(App),
-  router,
-  data: {
-    Chartist: Chartist
-  }
+    el: '#app',
+    router,
+    render: h => h(App),
 })
+
