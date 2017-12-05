@@ -24,6 +24,9 @@
                     </div>
                 </li>
                 </ul>
+                <form class="form-inline my-2 my-lg-1">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#novoProdModal">Novo Produto</button>
+                </form>
             </div>
         </nav>
         <br>
@@ -72,13 +75,13 @@
                                     <th scope="col" width="3%">Fechou?</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody v-if="verificaListaVazia">
                                     <tr v-for="item in itens" :key="item._id">
                                         <th scope="row">{{ itens.indexOf(item)+1}}</th>
                                         <td>{{ item.produto.produto }}</td>
                                         <td>{{ item.produto.unidade }}</td>
-                                        <td>{{ item.quantidade.toFixed(2) }}</td>
-                                        <td>R${{ item.valor.toFixed(2) }}</td>
+                                        <td>{{ item.quantidade }}</td>
+                                        <td>R${{ item.valor }}</td>
                                         <td>R${{ (item.valor * item.quantidade).toFixed(2)}}</td>
                                         <td align="center">
                                             <label class="custom-control custom-checkbox" align="center">
@@ -87,7 +90,7 @@
                                             </label>
                                         </td>
                                     </tr>
-                                    <tr v-show="exibeTotais" class="table-success" >
+                                    <tr v-show="verificaListaVazia" class="table-success" >
                                         <th scope="row">#</th>
                                         <td colspan="4"><b>Total</b></td>
                                         <td><b>R${{ saldoTotal }}</b></td>
@@ -109,7 +112,7 @@
             </div>
         </div>
 
-        <!-- Modal -->
+        <!-- Modal adicionar produto -->
         <div class="modal fade" id="insereProdModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -127,17 +130,50 @@
                             </div>
                             <div class="form-group">
                                 <label>Quantidade</label>
-                                <input type="number" class="form-control" v-bind:value="addQuantidade" placeholder="Insira a quantidade.">
+                                <input type="number" class="form-control" v-model="addQuantidade" placeholder="Insira a quantidade.">
                             </div>
                             <div class="input-group">
                                 <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" v-bind:value="addValor" placeholder="Insira o Valor.">
+                                <input type="number" class="form-control" v-model="addValor" placeholder="Insira o Valor.">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" @click="adicionaProduto()">Adicionar</button>
+                        <button type="button" class="btn btn-primary" @click="adicionaProduto()" data-dismiss="modal">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal novo Produto -->
+        <div class="modal fade" id="novoProdModal" tabindex="-1" role="dialog" aria-labelledby="novoProdModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="novoProdModal">Novo Produto no Sistema</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label>Produto</label>   
+                                <input type="text" class="form-control" v-model="novoProduto" placeholder="Insira a descrição do produto.">
+                            </div>
+                            <div class="form-group">
+                                <label>Unidade</label>
+                                <input type="number" class="form-control" v-model="addQuantidade" placeholder="Insira a unidade. Ex.: KG, LT, G, PCT">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" v-model="addValor" placeholder="Insira o Valor.">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" @click="adicionaProduto()" data-dismiss="modal">Adicionar</button>
                     </div>
                 </div>
             </div>
@@ -157,14 +193,14 @@ export default {
     },
     data(){
         return{
-            itens: [{}],
+            itens: [],
             currentVendedor: '',
             date: '',
             addProd:{},
-            addQuantidade: 0,
-            addValor: 0,
+            addQuantidade:'',
+            addValor:'',
             vendedores:['Aline', 'Marilia','Ivonilton', 'Rose', 'Itailara'],
-            produtosBase: [{produto:'ditane', _id:'1561asd', unidade: 'KG'}, {produto:'agrex', _id:'1561asd', unidade: 'KG'}],
+            produtosBase: [],
             prodSelected: '',
             rotas: {
                 inicio: '/',
@@ -188,14 +224,18 @@ export default {
             this.produtosBase.forEach(element => lista.push(element.produto));
             return lista;
         },
-        saldoTotal(){
-            let total = 0;
-            this.itens.forEach(element => {total += element.quantidade * element.valor});
-            return total.toFixed(2);
+        verificaListaVazia(){
+            let lista = (this.itens).length;
+            if (lista) return true;
+            return false;
         },
-        exibeTotais(){
-            if (this.itens.length) return true
-            return false
+        saldoTotal(){
+            if ((this.itens).length) {
+                let total = 0.0;
+                this.itens.forEach(element => {total += element.quantidade * element.valor})
+                return total.toFixed(2);
+            };
+            return 0;
         }
     },
     methods: {
@@ -207,9 +247,8 @@ export default {
         },
         adicionaProduto(){
             let indexProd = this.produtosBase.findIndex(i => i.produto === this.prodSelected);
-            let addProd = {produto:this.produtosBase[indexProd], quantidade: parseFloat(this.addQuantidade), valor: parseFloat(this.addValor)};
+            let addProd = {produto:this.produtosBase[indexProd], quantidade: parseFloat(this.addQuantidade).toFixed(2), valor: parseFloat(this.addValor).toFixed(2)};
             this.itens.push(addProd);
-            console.log(this.itens);
             return;
         }
     },
