@@ -9,6 +9,13 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/search/:q', function(req,rex,next){
+    var nome = req.params.q;
+    Controller.searchProdutos(nome, function(result){
+        return res.json(result);
+    });
+});
+
 router.post('/', function(req, res, next) {
     //cria um novo produto
     console.log('entrou');

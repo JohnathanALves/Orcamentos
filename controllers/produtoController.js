@@ -9,16 +9,20 @@ module.exports = {
     },
 
     createProdutos: function(nome, unidade, conc, callback) {
-        console.log('entrou 2');
         var prod = new Produto({
             'produto': nome,
             'unidade': unidade,
             'concorrencia': conc
         });
-        console.log('entrou');
         prod.save(function(err) {
             if (err) return console.log(err);
             return callback(prod);
+        });
+    },
+    searchProdutos: function(produto, callback){
+        Produto.find({'produto': produto}, function(err, docs){
+            if (err) return console.log(err);
+            return callback(docs);
         });
     }
 };
