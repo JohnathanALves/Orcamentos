@@ -124,14 +124,11 @@
                             <div class="form-group">
                                 <label>Produto</label>
                                     <autocomplete
-                                        url="http://localhost:3000/produto/"
+                                        url="http://localhost:3000/produto/search"
                                         anchor="produto"
                                         label="produto"
                                         :on-select="getData">
-                                    </autocomplete>
-                                
-                                
-                                
+                                    </autocomplete>                                
                                 <input type="text" class="form-control" placeholder="Insira o nome do produto.">
                             </div>
                             <div class="form-group">
