@@ -9,24 +9,27 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/search/:q', function(req,rex,next){
+router.get('/search/:q', function(req, rex, next) {
     var nome = req.params.q;
-    Controller.searchProdutos(nome, function(result){
+    Controller.searchProdutos(nome, function(result) {
         return res.json(result);
     });
 });
 
 router.post('/', function(req, res, next) {
     //cria um novo produto
-    console.log('entrou');
     var nome = req.body.produto;
     var unid = req.body.unidade;
-    var conc = (req.body.concorrencia === "true");
-    Controller.createProdutos(nome, unid, conc, function(produto) {
-        console.log('Novo Produto Criado!');
-        console.log(produto);
-        return res.json(produto);
-    });
+    var conc = req.body.concorrencia;
+    if (nome != '' && unid != '' && conc != null) {
+        Controller.createProdutos(nome, unid, conc, function(produto) {
+            console.log('Novo Produto Criado!');
+            console.log(produto);
+            return res.json(produto);
+        });
+    } else {
+        return res.send('dados inválidos!');
+    }
 });
 
 module.exports = router;

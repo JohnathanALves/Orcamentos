@@ -49,7 +49,7 @@
                             <div class="container ">
                                 <div class="row align-items-center">
                                     <div class="col-8" align="center">
-                                        <input class="form-control" type="text" placeholder="Insira aqui o Cliente">
+                                        <input class="form-control" type="text" placeholder="Insira aqui o Cliente" v-model="parceiro">
                                     </div>
                                     <div class="col-4">
                                         <div align="right">
@@ -101,10 +101,10 @@
                         </div>
                         <hr>
                         <div class="card-body" style="margin-top: 0px;display: inline-block;" align="right">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#insereProdModal" style="margin: 15px; width: 10rem;display: inline-block;">Adicionar Produto</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" @click="getBaseProd()" data-target="#insereProdModal" style="margin: 15px; width: 10rem;display: inline-block;">Adicionar Produto</button>
                             <button type="button" class="btn btn-danger" style="margin: 15px; width: 8rem; align:right;" >Cancelar</button>
                             <button type="button" class="btn btn-secondary" style="margin: 15px; width: 8rem;">Encerrar</button>
-                            <button type="button" class="btn btn-success" style="margin: 15px; width: 8rem;">Salvar</button>
+                            <button type="button" class="btn btn-success" style="margin: 15px; width: 8rem;" @click="addOrcamento()">Salvar</button>
                             
                         </div>
                     </div>
@@ -163,17 +163,26 @@
                             </div>
                             <div class="form-group">
                                 <label>Unidade</label>
-                                <input type="number" class="form-control" v-model="addQuantidade" placeholder="Insira a unidade. Ex.: KG, LT, G, PCT">
+                                <!-- <input type="text" class="form-control"  > -->
+                                    <select class="form-control" id="seletorUnidade" placeholder="Insira a unidade. Ex.: KG, LT, G, PCT" v-model="novoUnidade">
+                                        <option valor="LT">LITRO</option>
+                                        <option valor="KG">KILOGRAMA</option>
+                                        <option valor="G">GRAMA</option>
+                                        <option valor="PCT">PACOTE</option>
+                                    </select>
                             </div>
                             <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" v-model="addValor" placeholder="Insira o Valor.">
+                                <b>Concorrente</b> &nbsp
+                                <label class="custom-control custom-checkbox" align="center">
+                                    <input type="checkbox" class="custom-control-input" align="center" v-model="novoProdConc">
+                                    <span class="custom-control-indicator" align="center"></span>
+                                </label>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" @click="adicionaProduto()" data-dismiss="modal">Adicionar</button>
+                        <button type="button" class="btn btn-primary" @click="addProdutoOrcamento()" data-dismiss="modal">Adicionar</button>
                     </div>
                 </div>
             </div>
@@ -196,12 +205,16 @@ export default {
             itens: [],
             currentVendedor: '',
             date: '',
+            parceiro: '',
             addProd:{},
             addQuantidade:'',
             addValor:'',
             vendedores:['Aline', 'Marilia','Ivonilton', 'Rose', 'Itailara'],
             produtosBase: [],
             prodSelected: '',
+            novoProduto:'',
+            novoUnidade:'',
+            novoProdConc: true,
             rotas: {
                 inicio: '/',
                 cotacao: '/cotacao'
@@ -211,9 +224,6 @@ export default {
     computed: {
         listaVendedores() {
             return this.vendedores.sort();
-        },
-        atualizaVendedor(){
-            return this.currentVendedor = this.$vendedorSelecionado;
         },
         dataAtual(){
             let date = this.date = new Date();
@@ -239,6 +249,12 @@ export default {
         }
     },
     methods: {
+        addNovoProduto(){
+            let dados = {produto: this.novoProduto,unidade:this.novoUnidade,concorrencia:this.novoProdConc};
+            console.log(dados);
+            this.$http.post('produto', dados)
+            .then(response => console.log(response)); 
+        },
         totalFechados(){
             let total = 0;
             this.itens.forEach(element => {(element.fechou? total +=1:0) });
@@ -250,13 +266,40 @@ export default {
             let addProd = {produto:this.produtosBase[indexProd], quantidade: parseFloat(this.addQuantidade).toFixed(2), valor: parseFloat(this.addValor).toFixed(2)};
             this.itens.push(addProd);
             return;
-        }
+        },
+        getBaseProd(){
+            this.$http.get('produto')
+            .then(response => response.json())
+            .then(dados => this.produtosBase = dados, err => console.log(err));
+        },
+        addOrcamento: function(callback){
+            let vendedor = this.currentVendedor;
+            let data = this.date;
+            let parceiro = this.parceiro;
+            let dados = {data: data, parceiro: parceiro};
+            let res;
+            this.$http.post('orcamento/'+vendedor, dados)
+            .then(response => res = response.json())
+            .then(response => console.log(response));
+            return callback(res);
+        },
+        addProdutoOrcamento(){
+            this.addOrcamento(function(orcamento){
+                let codOrc = orcamento._id;
+                for (let i = 0; i < this.itens.length; i++){
+                    let tmp = this.itens[i];
+                    let dados = {codProduto: tmp.produto._id, quantidade: tmp.produto.quantidade, valor: tmp.produto.valor};
+                    console.log(dados);
+                    this.$http.post('orcamento/'+ vendedor + '/' + codOrc, dados)
+                    .then(response => console.log(response));
+                }
+            });
+        },
     },
-    // created(){
-    //     this.$http.get('produto')
-    //     .then(response => response.json())
-    //     .then(dados => this.produtosBase = dados, err => console.log(err));
-    // }
+    created(){
+    },
+    updated(){
+    }
 }
 </script>
 
