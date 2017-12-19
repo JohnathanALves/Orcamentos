@@ -7,12 +7,12 @@
             </div>
         </div>
         <nav class="navbar navbar-dark navbar-expand-sm navbar-light bg-dark">
-            <router-link class="navbar-brand" :to="rotas.inicio">Inicio</router-link>
+            <router-link class="navbar-brand" :to="{ name: 'home'}">Inicio</router-link>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <router-link class="nav-link" :to="rotas.cotacao">Cotação</router-link>
+                    <router-link class="nav-link" @click="this.Update()" :to="{ name: 'cotacaoNova'}">Cotação</router-link>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -104,7 +104,7 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" @click="getBaseProd()" data-target="#insereProdModal" style="margin: 15px; width: 10rem;display: inline-block;">Adicionar Produto</button>
                             <button type="button" class="btn btn-danger" style="margin: 15px; width: 8rem; align:right;" >Cancelar</button>
                             <button type="button" class="btn btn-secondary" style="margin: 15px; width: 8rem;">Encerrar</button>
-                            <button type="button" class="btn btn-success" style="margin: 15px; width: 8rem;" @click="addOrcamento()">Salvar</button>
+                            <button type="button" class="btn btn-success" style="margin: 15px; width: 8rem;" @click="salvar()">Salvar</button>
                             
                         </div>
                     </div>
@@ -200,6 +200,7 @@ export default {
         'datepicker': Datepicker,
         vSelect
     },
+    props: ['id'],
     data(){
         return{
             itens: [],
@@ -272,34 +273,55 @@ export default {
             .then(response => response.json())
             .then(dados => this.produtosBase = dados, err => console.log(err));
         },
-        addOrcamento: function(callback){
+        addOrcamento: function(){
             let vendedor = this.currentVendedor;
             let data = this.date;
             let parceiro = this.parceiro;
             let dados = {data: data, parceiro: parceiro};
-            let res;
             this.$http.post('orcamento/'+vendedor, dados)
-            .then(response => res = response.json())
-            .then(response => console.log(response));
-            return callback(res);
-        },
-        addProdutoOrcamento(){
-            this.addOrcamento(function(orcamento){
-                let codOrc = orcamento._id;
-                for (let i = 0; i < this.itens.length; i++){
-                    let tmp = this.itens[i];
-                    let dados = {codProduto: tmp.produto._id, quantidade: tmp.produto.quantidade, valor: tmp.produto.valor};
-                    console.log(dados);
-                    this.$http.post('orcamento/'+ vendedor + '/' + codOrc, dados)
-                    .then(response => console.log(response));
-                }
+            .then(response => {
+                let res = response.body;
+                this.addProdutoOrcamento(res);
             });
         },
+        addProdutoOrcamento(orcamento){
+            let codOrc = orcamento._id;
+            let vendedor = orcamento.vendedor;
+            for (let i = 0; i < this.itens.length; i++){
+                let tmp = this.itens[i];
+                let dados = {codProduto: tmp.produto._id, quantidade: tmp.quantidade, valor: tmp.valor};
+                this.$http.post('orcamento/'+ vendedor + '/' + codOrc, dados)
+                .then(response => console.log(response));
+            }
+        },
+        salvar(){
+            let id = this.id;
+            if(id){
+                console.log('opa');
+            } else {
+                this.addOrcamento();
+            }
+        }
     },
     created(){
+        let id = this.id;
+        if(id){
+            this.$http.get('orcamento/'+ id)
+            .then(response => {
+                let res = response.body;
+                console.log(res);
+                this.currentVendedor = res.vendedor;
+                this.parceiro = res.parceiro;
+                this.itens = res.itens;
+            });
+        } else {
+            this.itens= [];
+            this.currentVendedor= '';
+            this.date= '';
+            this.parceiro= '';
+        }
     },
-    updated(){
-    }
+    updated(){}
 }
 </script>
 

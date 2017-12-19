@@ -10,11 +10,13 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/:id', function(req, res, next) { //orcamento por nome de vendedor
-    var seller = req.params.id;
-    if (seller) {
-
-    }
+router.get('/:id', function(req, res, next) { //orcamento por id
+    var orcamento = req.params.id;
+    Controller.getOrcamentosByID(orcamento, function(orc) {
+        console.log("Get Orcamento By ID: ");
+        console.log(orc);
+        return res.json(orc);
+    });
 });
 
 router.get('/data/:dtIn/:dtFim', function(req, res, next) {
@@ -35,8 +37,14 @@ router.post('/:id', function(req, res, next) { //novo orcamento
     var parceiro = req.body.parceiro;
     var vendedor = req.params.id;
     Controller.createOrcamento(data, parceiro, vendedor, function(orc) {
+        console.log(orc);
         return res.json(orc);
     });
+});
+
+router.put('/:id/:cod', function(req, res, next) { //atualiza dados de orcamento
+    var vendedor = req.params.id;
+    var codOrcamento = req.params.cod;
 });
 
 router.post('/:id/:cod', function(req, res, next) { //insere produto no orcamento
