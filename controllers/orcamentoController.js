@@ -63,6 +63,7 @@ module.exports = {
                 doc.parceiro = dados.parceiro;
                 doc.itens = dados.itens;
                 doc.vendedor = dados.vendedor;
+                doc.status = dados.status;
                 doc.save(function(err) {
                     if (err) return console.log(err);
                     console.log('New: ', doc);

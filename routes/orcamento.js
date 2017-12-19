@@ -28,7 +28,6 @@ router.get('/data/:dtIn/:dtFim', function(req, res, next) {
         console.log(resultado);
         return res.json(resultado);
     });
-
 });
 
 router.post('/:id', function(req, res, next) { //novo orcamento
@@ -48,8 +47,9 @@ router.put('/:id/:cod', function(req, res, next) { //atualiza dados de orcamento
     let itens = req.body.itens;
     let parceiro = req.body.parceiro;
     let data = req.body.data;
+    let status = req.body.status;
     console.log(itens);
-    let dados = {'id': codOrcamento, 'vendedor': vendedor, 'parceiro': parceiro, 'data': data, 'itens': itens};
+    let dados = { 'id': codOrcamento, 'vendedor': vendedor, 'parceiro': parceiro, 'data': data, 'itens': itens, 'status': status };
     let response = Controller.atualizaOrcamento(codOrcamento, dados);
     return res.json(response);
 });
@@ -66,7 +66,5 @@ router.post('/:id/:cod', function(req, res, next) { //insere produto no orcament
         return res.json(orcamento);
     });
 });
-
-
 
 module.exports = router;

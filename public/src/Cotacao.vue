@@ -103,7 +103,7 @@
                         <div class="card-body" style="margin-top: 0px;display: inline-block;" align="right">
                             <button type="button" class="btn btn-primary" data-toggle="modal" @click="getBaseProd()" data-target="#insereProdModal" style="margin: 15px; width: 10rem;display: inline-block;">Adicionar Produto</button>
                             <button type="button" class="btn btn-danger" style="margin: 15px; width: 8rem; align:right;" >Cancelar</button>
-                            <button type="button" class="btn btn-secondary" style="margin: 15px; width: 8rem;">Encerrar</button>
+                            <button type="button" class="btn btn-secondary" style="margin: 15px; width: 8rem;" @click="encerrar()">Encerrar</button>
                             <button type="button" class="btn btn-success" style="margin: 15px; width: 8rem;" @click="salvar()">Salvar</button>
                             
                         </div>
@@ -182,7 +182,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" @click="addProdutoOrcamento()" data-dismiss="modal">Adicionar</button>
+                        <button type="button" class="btn btn-primary" @click="addNovoProduto()" data-dismiss="modal">Adicionar</button>
                     </div>
                 </div>
             </div>
@@ -297,17 +297,31 @@ export default {
         salvar(){
             let id = this.id;
             if(id){
-                console.log('opa');
                 let vendedor = this.currentVendedor;
                 let data = this.date;
                 let parceiro = this.parceiro;
                 let itens = this.itens;
-                let dados = {data: data, parceiro: parceiro, itens: itens};
-                console.log(dados);
+                let dados = {data: data, parceiro: parceiro, itens: itens, status: true};
                 this.$http.put('orcamento/'+vendedor+'/'+id, dados)
                 .then(response => console.log(response));
+                alert('Cotação salva com sucesso!');
             } else {
                 this.addOrcamento();
+                alert('Cotação salva com sucesso!');
+            }
+        },
+        encerrar(){
+            let id = this.id;
+            if(id){
+                let vendedor = this.currentVendedor;
+                let data = this.date;
+                let parceiro = this.parceiro;
+                let itens = this.itens;
+                let dados = {data: data, parceiro: parceiro, itens: itens, status: false};
+                this.$http.put('orcamento/'+vendedor+'/'+id, dados)
+                .then(response => console.log(response));
+                alert('Cotação encerrada com sucesso!');
+            } else {
             }
         }
     },
