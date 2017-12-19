@@ -298,6 +298,14 @@ export default {
             let id = this.id;
             if(id){
                 console.log('opa');
+                let vendedor = this.currentVendedor;
+                let data = this.date;
+                let parceiro = this.parceiro;
+                let itens = this.itens;
+                let dados = {data: data, parceiro: parceiro, itens: itens};
+                console.log(dados);
+                this.$http.put('orcamento/'+vendedor+'/'+id, dados)
+                .then(response => console.log(response));
             } else {
                 this.addOrcamento();
             }

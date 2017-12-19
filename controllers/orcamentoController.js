@@ -65,7 +65,7 @@ module.exports = {
                 doc.vendedor = dados.vendedor;
                 doc.save(function(err) {
                     if (err) return console.log(err);
-                    console.lof('New: ', doc);
+                    console.log('New: ', doc);
                     return true;
                 });
             });

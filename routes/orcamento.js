@@ -43,8 +43,15 @@ router.post('/:id', function(req, res, next) { //novo orcamento
 });
 
 router.put('/:id/:cod', function(req, res, next) { //atualiza dados de orcamento
-    var vendedor = req.params.id;
-    var codOrcamento = req.params.cod;
+    let vendedor = req.params.id;
+    let codOrcamento = req.params.cod;
+    let itens = req.body.itens;
+    let parceiro = req.body.parceiro;
+    let data = req.body.data;
+    console.log(itens);
+    let dados = {'id': codOrcamento, 'vendedor': vendedor, 'parceiro': parceiro, 'data': data, 'itens': itens};
+    let response = Controller.atualizaOrcamento(codOrcamento, dados);
+    return res.json(response);
 });
 
 router.post('/:id/:cod', function(req, res, next) { //insere produto no orcamento
