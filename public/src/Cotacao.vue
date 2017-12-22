@@ -126,7 +126,16 @@
                         <form>
                             <div class="form-group">
                                 <label>Produto</label>   
-                                <v-select v-model="prodSelected" :options="listaProdutos"></v-select>
+                                <v-select
+                                    :debounce="250"
+                                    :on-search="getOptions"
+                                    :options="produtosBase"
+                                    placeholder="Buscar Produto"
+                                    label="produto"
+                                    v-model= "prodSelected"
+                                >
+                                </v-select>
+                                <!-- <v-select v-model="prodSelected" :options="listaProdutos"></v-select> -->
                             </div>
                             <div class="form-group">
                                 <label>Quantidade</label>
@@ -250,6 +259,17 @@ export default {
         }
     },
     methods: {
+        getOptions(search, loading) {
+            loading(true);
+            this.$http.get('produto/search/'+search)
+            .then(resp => {
+                
+                let response = resp.body;
+                console.log(response);
+                this.produtosBase = response;
+                loading(false);
+            })
+        },
         addNovoProduto(){
             let dados = {produto: this.novoProduto,unidade:this.novoUnidade,concorrencia:this.novoProdConc};
             console.log(dados);
@@ -263,15 +283,10 @@ export default {
             return;
         },
         adicionaProduto(){
-            let indexProd = this.produtosBase.findIndex(i => i.produto === this.prodSelected);
-            let addProd = {produto:this.produtosBase[indexProd], quantidade: parseFloat(this.addQuantidade).toFixed(2), valor: parseFloat(this.addValor).toFixed(2)};
+            let addProd = {produto:this.prodSelected, quantidade: parseFloat(this.addQuantidade).toFixed(2), valor: parseFloat(this.addValor).toFixed(2)};
+            console.log(addProd);
             this.itens.push(addProd);
             return;
-        },
-        getBaseProd(){
-            this.$http.get('produto')
-            .then(response => response.json())
-            .then(dados => this.produtosBase = dados, err => console.log(err));
         },
         addOrcamento: function(){
             let vendedor = this.currentVendedor;

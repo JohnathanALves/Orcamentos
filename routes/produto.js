@@ -9,9 +9,12 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/search/:q', function(req, rex, next) {
+router.get('/search/:q', function(req, res, next) {
+
     var nome = req.params.q;
+    console.log('busca: param ' + nome);
     Controller.searchProdutos(nome, function(result) {
+        console.log(result);
         return res.json(result);
     });
 });

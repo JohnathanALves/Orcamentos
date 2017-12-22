@@ -19,8 +19,8 @@ module.exports = {
             return callback(prod);
         });
     },
-    searchProdutos: function(produto, callback){
-        Produto.find({'produto': produto}, function(err, docs){
+    searchProdutos: function(produto, callback) {
+        Produto.find({ produto: new RegExp(produto, "i") }, function(err, docs) {
             if (err) return console.log(err);
             return callback(docs);
         });
