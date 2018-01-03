@@ -265,7 +265,6 @@ export default {
                 this.$http.get('produto/search/'+search)
                 .then(resp => {           
                     let response = resp.body;
-                    console.log(response);
                     this.produtosBase = response;
                     loading(false);
                 })
@@ -273,9 +272,7 @@ export default {
         },
         addNovoProduto(){
             let dados = {produto: this.novoProduto,unidade:this.novoUnidade,concorrencia:this.novoProdConc};
-            console.log(dados);
             this.$http.post('produto', dados)
-            .then(response => console.log(response)); 
         },
         totalFechados(){
             let total = 0;
@@ -285,7 +282,6 @@ export default {
         },
         adicionaProduto(){
             let addProd = {produto:this.prodSelected, quantidade: parseFloat(this.addQuantidade).toFixed(2), valor: parseFloat(this.addValor).toFixed(2)};
-            console.log(addProd);
             this.itens.push(addProd);
             return;
         },
@@ -307,7 +303,6 @@ export default {
                 let tmp = this.itens[i];
                 let dados = {codProduto: tmp.produto._id, quantidade: tmp.quantidade, valor: tmp.valor};
                 this.$http.post('orcamento/'+ vendedor + '/' + codOrc, dados)
-                .then(response => console.log(response));
             }
         },
         salvar(){
@@ -319,7 +314,6 @@ export default {
                 let itens = this.itens;
                 let dados = {data: data, parceiro: parceiro, itens: itens, status: true};
                 this.$http.put('orcamento/'+vendedor+'/'+id, dados)
-                .then(response => console.log(response));
                 alert('Cotação salva com sucesso!');
             } else {
                 this.addOrcamento();
@@ -335,7 +329,6 @@ export default {
                 let itens = this.itens;
                 let dados = {data: data, parceiro: parceiro, itens: itens, status: false};
                 this.$http.put('orcamento/'+vendedor+'/'+id, dados)
-                .then(response => console.log(response));
                 alert('Cotação encerrada com sucesso!');
             } else {
             }
@@ -347,7 +340,6 @@ export default {
             this.$http.get('orcamento/'+ id)
             .then(response => {
                 let res = response.body;
-                console.log(res);
                 this.currentVendedor = res.vendedor;
                 this.parceiro = res.parceiro;
                 this.itens = res.itens;
