@@ -88,6 +88,11 @@
                                                 <input type="checkbox" class="custom-control-input" align="center" v-model="item.fechou">
                                                 <span class="custom-control-indicator" align="center"></span>
                                             </label>
+                                            <label class="custom-close">
+                                                <button type="button" class="close" aria-label="Close" color="red" @click="removeElement(item)">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </label>
                                         </td>
                                     </tr>
                                     <tr v-show="verificaListaVazia" class="table-success" >
@@ -259,6 +264,13 @@ export default {
         }
     },
     methods: {
+        removeElement(item){
+            let index = (this.itens).indexOf(item);
+            console.log(index);
+            this.$delete(this.itens, index);
+            return;
+        },
+        
         getOptions(search, loading) {
             loading(true);
             if (search){
@@ -356,6 +368,20 @@ export default {
 </script>
 
 <style scoped>
+
+.custom-close {
+    display: inline;
+}
+.close {
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 18px;
+    color: #FF0000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.70;
+    filter: alpha(opacity=50);
+    text-decoration: none;
+}
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
   background-color: #C2E5CB;
