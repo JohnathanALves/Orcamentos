@@ -181,7 +181,7 @@
                                     </select>
                             </div>
                             <div class="input-group">
-                                <b>Concorrente</b> &nbsp
+                                <b>Concorrente</b> &nbsp;
                                 <label class="custom-control custom-checkbox" align="center">
                                     <input type="checkbox" class="custom-control-input" align="center" v-model="novoProdConc">
                                     <span class="custom-control-indicator" align="center"></span>
@@ -261,13 +261,15 @@ export default {
     methods: {
         getOptions(search, loading) {
             loading(true);
-            this.$http.get('produto/search/'+search)
-            .then(resp => {           
-                let response = resp.body;
-                console.log(response);
-                this.produtosBase = response;
-                loading(false);
-            })
+            if (search){
+                this.$http.get('produto/search/'+search)
+                .then(resp => {           
+                    let response = resp.body;
+                    console.log(response);
+                    this.produtosBase = response;
+                    loading(false);
+                })
+            }
         },
         addNovoProduto(){
             let dados = {produto: this.novoProduto,unidade:this.novoUnidade,concorrencia:this.novoProdConc};
