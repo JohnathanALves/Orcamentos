@@ -101,7 +101,7 @@
                         </div>
                         <hr>
                         <div class="card-body" style="margin-top: 0px;display: inline-block;" align="right">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" @click="getBaseProd()" data-target="#insereProdModal" style="margin: 15px; width: 10rem;display: inline-block;">Adicionar Produto</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#insereProdModal" style="margin: 15px; width: 10rem;display: inline-block;">Adicionar Produto</button>
                             <button type="button" class="btn btn-danger" style="margin: 15px; width: 8rem; align:right;" >Cancelar</button>
                             <button type="button" class="btn btn-secondary" style="margin: 15px; width: 8rem;" @click="encerrar()">Encerrar</button>
                             <button type="button" class="btn btn-success" style="margin: 15px; width: 8rem;" @click="salvar()">Salvar</button>
@@ -262,8 +262,7 @@ export default {
         getOptions(search, loading) {
             loading(true);
             this.$http.get('produto/search/'+search)
-            .then(resp => {
-                
+            .then(resp => {           
                 let response = resp.body;
                 console.log(response);
                 this.produtosBase = response;

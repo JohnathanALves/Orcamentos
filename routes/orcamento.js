@@ -54,6 +54,13 @@ router.put('/:id/:cod', function(req, res, next) { //atualiza dados de orcamento
     return res.json(response);
 });
 
+router.delete('/:cod', function(req, res, next) {
+    let id = req.params.cod;
+    console.log('Delete Orcamento by ID: ', id);
+    let response = Controller.deleteByID(id);
+    return res.json(response);
+});
+
 router.post('/:id/:cod', function(req, res, next) { //insere produto no orcamento
     var vendedor = req.params.id;
     var codOrcamento = req.params.cod;

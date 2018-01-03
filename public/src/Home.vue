@@ -40,6 +40,11 @@
             <li v-for="card in cardComFiltro" :key="card._id">
               <div class="card mb-3 " v-bind:class="'border-'+cardBorder(card)" style="max-width: 20rem;">
                 <div class="card-body">
+                  <div align="right">
+                    <button type="button" class="close" aria-label="Close" align="right" @click="deleteOrc(card)">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>          
                   <h4 class="card-title" align="center">{{ caixaAlta(card.parceiro) }}</h4>
                   <p class="card-text">
                     <ul>
@@ -68,7 +73,6 @@ export default {
     return {
       orcamentos : [],
       filtro: '',
-      msg: 'Welcome to Your Vue.js App',
       rotas: {
         inicio: '/',
         cotacao: '/cotacao'
@@ -76,11 +80,14 @@ export default {
     }
   },
   created: function(){
-    this.$http.get('orcamento')
-    .then(response => response.json())
-    .then(dados => this.orcamentos = dados, err => console.log(err));
+    this.getOrcamentos();
   },
   methods: {
+    getOrcamentos(){
+      this.$http.get('orcamento')
+      .then(response => response.json())
+      .then(dados => this.orcamentos = dados, err => console.log(err));
+    },
     caixaAlta: function(data) {
       return data.toUpperCase();
     },
@@ -98,6 +105,16 @@ export default {
     },
     getRota: function(card){
       return this.rotas.cotacao + "/" + card._id;
+    },
+    deleteOrc: function(card){
+      let rota = 'orcamento/'+card._id;
+      this.$http.delete(rota)
+      .then(response => {
+        let index = (this.orcamentos).indexOf(card);
+        this.$delete(this.orcamentos, index);
+        console.log('card deleted!');
+      });
+      
     }
   },
   computed: {

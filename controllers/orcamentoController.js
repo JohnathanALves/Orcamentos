@@ -72,6 +72,13 @@ module.exports = {
             });
     },
 
+    deleteByID: function(cod) {
+        Orcamento.findByIdAndRemove(cod, function(err, doc) {
+            if (err) return console.log(err);
+            return doc;
+        });
+    },
+
     getOrcamentosByID: function(codOrcamento, callback) {
         Orcamento.findById(codOrcamento)
             .populate('itens.produto', ['produto', 'unidade', 'concorrencia'])
