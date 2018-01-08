@@ -10,6 +10,12 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/report', function(req, res, next) {
+    Controller.report(function(result) {
+        res.json(result);
+    });
+});
+
 router.get('/:id', function(req, res, next) { //orcamento por id
     var orcamento = req.params.id;
     Controller.getOrcamentosByID(orcamento, function(orc) {

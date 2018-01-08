@@ -1,5 +1,6 @@
 var Orcamento = require('../models/orcamentoModel');
 var Produto = require('../models/produtoModel');
+var json2csv = require('json2csv');
 
 module.exports = {
     getOrcamentosByDate: function(start, end, callback) {
@@ -9,6 +10,19 @@ module.exports = {
                 if (err) return console.log(err);
                 return callback(result);
             });
+    },
+
+    report: function(callback) {
+        this.getOrcamentos(function(dados) {
+            var result;
+            var fields = ['data', 'parceiro', 'vendedor', 'status', 'itens.produto', 'itens.quantidade', 'itens.valor', 'itens.fechou'];
+            try {
+                result = json2csv({ data: dados, fields: fields });
+            } catch (err) {
+                console.log(err);
+            }
+            return callback(result);
+        });
     },
 
     getOrcamentos: function(callback) {
