@@ -19,7 +19,7 @@
                     Relatórios
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Modelo 1</a>
+                    <a class="dropdown-item" href="http://127.0.0.1:3000/orcamento/report/">Modelo 1</a>
                     <a class="dropdown-item" href="#">Modelo 2</a>
                     </div>
                 </li>

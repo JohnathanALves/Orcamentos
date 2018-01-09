@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/report', function(req, res, next) {
     Controller.report(function(result) {
-        res.json(result);
+        res.download(result, 'relatorio.csv');
     });
 });
 
