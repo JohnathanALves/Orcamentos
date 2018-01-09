@@ -5,7 +5,6 @@ var Controller = require('../controllers/orcamentoController');
 
 router.get('/', function(req, res, next) {
     Controller.getOrcamentos(function(result) {
-        console.log(result);
         return res.json(result);
     });
 });

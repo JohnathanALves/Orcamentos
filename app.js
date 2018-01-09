@@ -9,22 +9,22 @@ var app = express();
 
 //database connection
 var uri = 'mongodb://127.0.0.1:27017/orcamento'
-mongoose.connect(uri, {useMongoClient: true});
+mongoose.connect(uri, { useMongoClient: true });
 
 // CONNECTION EVENTS
 // When successfully connected
-mongoose.connection.on('connected', function () {
-  console.log('Mongoose default connection open to ' + uri);
+mongoose.connection.on('connected', function() {
+    console.log('Mongoose default connection open to ' + uri);
 });
 
 // If the connection throws an error
-mongoose.connection.on('error',function (err) {
-  console.log('Mongoose default connection error: ' + err);
+mongoose.connection.on('error', function(err) {
+    console.log('Mongoose default connection error: ' + err);
 });
 
 // When the connection is disconnected
-mongoose.connection.on('disconnected', function () {
-  console.log('Mongoose default connection disconnected');
+mongoose.connection.on('disconnected', function() {
+    console.log('Mongoose default connection disconnected');
 });
 
 
@@ -37,16 +37,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 // carregamento de rotas
 
 var main = require('./routes/main'); // inicial
-var orcamento = require('./routes/orcamento'); 
-var produto = require('./routes/produto'); 
+var orcamento = require('./routes/orcamento');
+var produto = require('./routes/produto');
 
 //enable cors
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-  next();
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    next();
 });
 
 
@@ -57,17 +57,17 @@ app.use('/produto', produto);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  // var err = new Error('Not Found');
-  // err.status = 404;
-  // next(err);
-  res.send('404');
+    // var err = new Error('Not Found');
+    // err.status = 404;
+    // next(err);
+    res.send('404');
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  console.log('error');
-  console.log(err.message);
+    // set locals, only providing error in development
+    console.log('error');
+    console.log(err.message);
 });
 
 module.exports = app;

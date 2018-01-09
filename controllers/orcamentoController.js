@@ -6,7 +6,7 @@ var fs = require('fs');
 module.exports = {
     getOrcamentosByDate: function(start, end, callback) {
         Orcamento.find({ data: { $gte: start, $lte: end } })
-            .populate('itens.produto')
+            .populate('itens.produto', ['produto', 'unidade', 'concorrencia'])
             .exec(function(err, result) {
                 if (err) return console.log(err);
                 return callback(result);
@@ -15,11 +15,14 @@ module.exports = {
 
     report: function(callback) {
         this.getOrcamentos(function(dados) {
+            let dat = JSON.stringify(dados);
+            let gamb = JSON.parse(dat);
             var result;
-            var fields = ['data', 'parceiro', 'vendedor', 'status', 'itens.produto', 'itens.quantidade', 'itens.valor', 'itens.fechou'];
-            var fieldNames = ['data', 'parceiro', 'vendedor', 'situacao', 'produto', 'quantidade', 'valor', 'fechou'];
+            var fields = ['data', 'parceiro', 'vendedor', 'status', 'itens.produto.produto', 'itens.produto.unidade', 'itens.produto.concorrencia', 'itens.quantidade', 'itens.valor', 'itens.fechou'];
+            var fieldNames = ['data', 'parceiro', 'vendedor', 'situacao', 'produto', 'unidade', 'concorrencia', 'quantidade', 'valor', 'fechou'];
             var options = {
-                data: dados,
+                unwindPath: ['itens', 'itens.produto'],
+                data: gamb,
                 fields: fields,
                 fieldNames: fieldNames,
                 quotes: ''
