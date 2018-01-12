@@ -20,7 +20,9 @@ module.exports = {
         });
     },
     searchProdutos: function(produto, callback) {
-        Produto.find({ produto: new RegExp(produto, "i") })
+        Produto.find({
+                produto: new RegExp(produto, "i")
+            })
             .limit(5)
             .exec(function(err, docs) {
                 if (err) return console.log(err);

@@ -54,7 +54,14 @@ router.put('/:id/:cod', function (req, res, next) { //atualiza dados de orcament
     let data = req.body.data;
     let status = req.body.status;
     console.log(itens);
-    let dados = { 'id': codOrcamento, 'vendedor': vendedor, 'parceiro': parceiro, 'data': data, 'itens': itens, 'status': status };
+    let dados = {
+        'id': codOrcamento,
+        'vendedor': vendedor,
+        'parceiro': parceiro,
+        'data': data,
+        'itens': itens,
+        'status': status
+    };
     let response = Controller.atualizaOrcamento(codOrcamento, dados);
     return res.json(response);
 });
